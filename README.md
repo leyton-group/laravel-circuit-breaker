@@ -1,5 +1,5 @@
 ## Motivation
-TBD
+The Circuit Breaker Pattern is essential for ensuring your software's resilience. It prevents failures from spreading, maintaining operational stability even when services encounter issues. By providing visual feedback and improving user experience, it keeps your application running smoothly. Additionally, it simplifies maintenance and troubleshooting, enabling quicker problem resolution. Overall, integrating the Circuit Breaker Pattern is crucial for enhancing reliability and user satisfaction.
 ## Installation
 ````
 composer require leyton/laravel-circuit-breaker
