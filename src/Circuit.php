@@ -10,9 +10,6 @@ use Leyton\LaravelCircuitBreaker\Concerns\ManagesCircuit;
 use Leyton\LaravelCircuitBreaker\Exceptions\CircuitOpenedException;
 use Leyton\LaravelCircuitBreaker\Exceptions\RequestFailedException;
 use Leyton\LaravelCircuitBreaker\Exceptions\StillOnHoldException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\SimpleCache\InvalidArgumentException;
 
 readonly class Circuit
 {
@@ -21,8 +18,6 @@ readonly class Circuit
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function status(string $service): CircuitStatus
     {
@@ -34,9 +29,6 @@ readonly class Circuit
      * @param Closure $function
      * @return mixed
      * @throws CircuitOpenedException
-     * @throws ContainerExceptionInterface
-     * @throws InvalidArgumentException
-     * @throws NotFoundExceptionInterface
      * @throws StillOnHoldException
      */
     public function run(string $service, Closure $function): mixed

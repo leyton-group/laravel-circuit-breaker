@@ -2,7 +2,7 @@
 TBD
 ## Installation
 ````
-compose require leyton/laravel-circuit-breaker
+composer require leyton/laravel-circuit-breaker
 ````
 After the installation make sure to publish the assets
 ````
