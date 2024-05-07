@@ -1,0 +1,28 @@
+{
+    "name": "leyton/laravel-circuit-breaker",
+    "description": "The Laravel implementation for The Circuit breaker pattern",
+    "license": "MIT",
+    "keywords": ["laravel", "circuit breaker", "api", "php"],
+    "authors": [
+        {
+            "name": "Inani El Houssain",
+            "email": "inanielhoussain@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Leyton\\LaravelCircuitBreaker\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "~8|~9|~10"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Leyton\\LaravelCircuitBreaker\\LaravelCircuitBreakerServiceProvider"
+            ]
+        }
+    }
+}
