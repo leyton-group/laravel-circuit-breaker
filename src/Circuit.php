@@ -10,6 +10,7 @@ use Leyton\LaravelCircuitBreaker\Concerns\ManagesCircuit;
 use Leyton\LaravelCircuitBreaker\Exceptions\CircuitOpenedException;
 use Leyton\LaravelCircuitBreaker\Exceptions\RequestFailedException;
 use Leyton\LaravelCircuitBreaker\Exceptions\StillOnHoldException;
+use Leyton\LaravelCircuitBreaker\Transporters\Packet;
 
 readonly class Circuit
 {
@@ -31,11 +32,13 @@ readonly class Circuit
      * @throws CircuitOpenedException
      * @throws StillOnHoldException
      */
-    public function run(string $service, Closure $function): mixed
+    public function run(string $service, Closure $function): Packet
     {
         if($this->circuit->status($service) === CircuitStatus::OPEN){
             if($this->circuit->inWait($service)){
-                throw new StillOnHoldException();
+                return new Packet(
+                    null, CircuitStatus::OPEN
+                );
             }
             $this->circuit->halfOpen($service);
         }
@@ -51,15 +54,21 @@ readonly class Circuit
                 }
             }
 
-            return $result;
+            return new Packet(
+                $result, $this->circuit->status($service)
+            );
         }catch (RequestFailedException){
             $this->circuit->failed($service);
             if($this->circuit->thresholdExceeded($service)){
                 $this->circuit->open($service);
-                throw new CircuitOpenedException();
+                return new Packet(
+                    null, CircuitStatus::OPEN
+                );
             }
 
-            return null;
+            return new Packet(
+                null, CircuitStatus::HALF_OPEN
+            );
         }
     }
 }
