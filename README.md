@@ -20,4 +20,46 @@ return [
 ````
 ## Usage
 
-TBD
+The package provides you a straight forward api to use.
+
+````php
+<?php
+
+use Leyton\LaravelCircuitBreaker\Circuit;
+use Leyton\LaravelCircuitBreaker\Exceptions\RequestFailedException;
+
+
+function goToGoogle(){
+  try{
+    $response = Http::get("https://gooogle.com");
+
+    if($response->status() === 500){
+        throw new RequestFailedException();
+    }
+
+  return "all is good";
+  }catch(\Exception $exception){
+    throw new RequestFailedException();
+  }
+}
+
+
+$circuit = app()->make(Circuit::class);
+
+// the run method expects the service name and the function that wraps the service
+// it should throw the RequestFailedException when the service is not responding as expected
+$packet =  $circuit->run("go-to-google", fn() => goToGoogle());
+
+````
+The packet object holds the result of the callback and the status of the service
+
+````php
+Leyton\LaravelCircuitBreaker\Transporters\Packet {#2939
+    +result: "all is good",
+    +status: Leyton\LaravelCircuitBreaker\CircuitStatus {#2943
+        +name: "HALF_OPEN",
+        +value: "half-open",
+    },
+}
+
+````
