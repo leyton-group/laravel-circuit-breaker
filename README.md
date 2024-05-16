@@ -17,9 +17,9 @@ You will find the ````config/circuit-breaker.php```` file containing all the con
 <?php
 
 return [
-  'threshold' => 10,
-  'expires_after_seconds' => 10,
-  'driver' => 'redis',
+  'threshold' => 10, // number of trials to pass from half-open to closed/open and from closed to half-open
+  'expires_after_seconds' => 10, // the seconds it takes while in the open status
+  'driver' => 'redis', // the cache store driver
 ];
 ````
 ## Usage
