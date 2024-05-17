@@ -8,7 +8,7 @@ use Leyton\LaravelCircuitBreaker\CircuitStatus;
 
 class Packet
 {
-    public function __construct(public readonly mixed $result, public readonly CircuitStatus $status)
+    public function __construct(public readonly mixed $result, public readonly CircuitStatus $status, public readonly bool $success = true)
     {
     }
 }

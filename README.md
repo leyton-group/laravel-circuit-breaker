@@ -65,6 +65,7 @@ Leyton\LaravelCircuitBreaker\Transporters\Packet {#2939
         +name: "CLOSED",
         +value: "closed",
     },
+    +success: true,
 }
 
 ````

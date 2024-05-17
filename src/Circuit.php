@@ -43,7 +43,7 @@ readonly class Circuit
         if($this->circuit->status($service) === CircuitStatus::OPEN){
             if($this->circuit->inWait($service)){
                 return new Packet(
-                    null, CircuitStatus::OPEN
+                    null, CircuitStatus::OPEN, false
                 );
             }
             $this->circuit->halfOpen($service);
@@ -62,19 +62,19 @@ readonly class Circuit
             }
 
             return new Packet(
-                $result, $this->circuit->status($service)
+                $result, $this->circuit->status($service), true
             );
         }catch (RequestFailedException){
             $this->circuit->failed($service);
             if($this->circuit->thresholdExceeded($service)){
                 $this->circuit->open($service);
                 return new Packet(
-                    null, CircuitStatus::OPEN
+                    null, CircuitStatus::OPEN, false
                 );
             }
 
             return new Packet(
-                null, $this->circuit->status($service)
+                null, $this->circuit->status($service), false
             );
         }
     }
