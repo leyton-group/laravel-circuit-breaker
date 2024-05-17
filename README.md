@@ -3,6 +3,8 @@ The Circuit Breaker Pattern is essential for ensuring your software's resilience
 
 ![Circuit Breaker states](https://github.com/leyton-group/laravel-circuit-breaker/assets/12276076/64e09281-f2c0-4cd2-9b7f-f268bc6e779a)
 
+
+You can find more detailes about this pattern here [odata-v4-server](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 ## Installation
 ````
 composer require leyton/laravel-circuit-breaker
@@ -70,7 +72,7 @@ Leyton\LaravelCircuitBreaker\Transporters\Packet {#2939
 
 ````
 
-One of the benefits of this pattern is to prevent the system to perform unecessary actions when there are multiple transactions.
+One of the benefits of this pattern is to prevent the system from performing unnecessary actions when there are multiple transactions.
 This is an example of the usage
 
 ````php
