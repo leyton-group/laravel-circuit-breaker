@@ -68,3 +68,53 @@ Leyton\LaravelCircuitBreaker\Transporters\Packet {#2939
 }
 
 ````
+
+One of the benefits of this pattern is to prevent the system to perform unecessary actions when there are multiple transactions.
+This is an example of the usage
+
+````php
+<?php
+
+namespace App\Http\Controllers;
+
+use Leyton\LaravelCircuitBreaker\Circuit;
+use App\Services\LocationServiceClient;
+use App\Services\PaymentGatewayClient;
+use Illuminate\Http\Request;
+use Exception;
+
+
+class MakeOrderController extends Controller
+{
+    public function __construct(
+        protected LocationServiceClient $locationServiceClient,
+        protected PaymentGatewayClient $paymentGatewayClient,
+        protected Circuit $Circuit,
+    ) {
+        
+    }
+
+    public function __invoke(Request $request)
+    {
+        $location = $request->get('location');
+        $paymentDetails = $request->get('payment_details');
+        $client = $request->get('client');
+
+        if(!$this->circuit->available(['location-service', 'payment-service'])){
+            return response()->json([
+                'message' => 'Services are un-available, please retry later'
+            ]);
+        }
+        
+        $withdrawalPoint = $this->circuit->run("location-service", fn() => $this->locationServiceClient->getNearWithdrawalPoint($location));
+        
+        $payment = $this->circuit->run(
+                "payment-service", 
+                fn() => $this->paymentGatewayClient->processPayment($client, $order, $withdrawalPoint->result)
+        );
+        
+        return response()->json($data);
+    }
+}
+
+````
