@@ -22,6 +22,17 @@ readonly class Circuit
         return $this->circuit->status($service);
     }
 
+    public function areAvailable(array $services): bool
+    {
+        foreach ($services as $service) {
+            if($this->status($service) === CircuitStatus::OPEN) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @param string $service
      * @param callable $function

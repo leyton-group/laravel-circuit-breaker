@@ -8,9 +8,9 @@ use Leyton\LaravelCircuitBreaker\CircuitStatus;
 
 interface ManagesCircuit
 {
-    public function close(string $service): bool;
-    public function open(string $service): bool;
-    public function halfOpen(string $service): bool;
-    public function toStatus(string $service, CircuitStatus $status): bool;
+    public function close(string $service): void;
+    public function open(string $service): void;
+    public function halfOpen(string $service): void;
+    public function toStatus(string $service, CircuitStatus $status): void;
     public function status(string $service):CircuitStatus;
 }

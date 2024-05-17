@@ -11,7 +11,7 @@ use Leyton\LaravelCircuitBreaker\Concerns\HasLimit;
 use Leyton\LaravelCircuitBreaker\Concerns\ManagesCircuit;
 use Psr\SimpleCache\InvalidArgumentException;
 
-class RedisOfficer implements ManagesCircuit, HasLimit
+class CacheOfficer implements ManagesCircuit, HasLimit
 {
     public function __construct(protected Repository $cache)
     {
@@ -34,49 +34,44 @@ class RedisOfficer implements ManagesCircuit, HasLimit
     /**
      * @throws InvalidArgumentException
      */
-    public function close(string $service): bool
+    public function close(string $service): void
     {
         $this->toStatus($service, CircuitStatus::CLOSED);
-        return true;
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    public function open(string $service): bool
+    public function open(string $service): void
     {
         $this->toStatus($service, CircuitStatus::OPEN);
-        $this->cache->set("circuit:{$service}:expires_at", Carbon::now()->addSeconds(
-            config('circuit-breaker.expires_after_seconds')
+        $this->cache->set("circuit:{$service}:available_at", Carbon::now()->addSeconds(
+            config('circuit-breaker.available_after_seconds')
         ));
         $this->cache->delete("circuit:{$service}:failure");
         $this->cache->delete("circuit:{$service}:success");
-        return true;
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    public function toStatus(string $service, CircuitStatus $status): bool
+    public function toStatus(string $service, CircuitStatus $status): void
     {
         $this->cache->set("circuit:{$service}:status", $status->value);
-        return true;
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    public function halfOpen(string $service): bool
+    public function halfOpen(string $service): void
     {
         $this->toStatus($service, CircuitStatus::HALF_OPEN);
 
-        $this->cache->delete("circuit:{$service}:expires_at");
+        $this->cache->delete("circuit:{$service}:available_at");
 
         $this->cache->delete("circuit:{$service}:success");
 
         $this->cache->set("circuit:{$service}:failure", 0);
-
-        return true;
     }
 
 
@@ -99,9 +94,9 @@ class RedisOfficer implements ManagesCircuit, HasLimit
      */
     public function inWait(string $service): bool
     {
-        $expires_at = Carbon::parse($this->cache->get("circuit:{$service}:expires_at"));
+        $available_at = Carbon::parse($this->cache->get("circuit:{$service}:available_at"));
 
-        return now()->lessThan($expires_at);
+        return now()->lessThan($available_at);
     }
 
     /**

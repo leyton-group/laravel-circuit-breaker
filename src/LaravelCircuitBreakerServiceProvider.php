@@ -2,7 +2,7 @@
 namespace  Leyton\LaravelCircuitBreaker;
 
 use Illuminate\Support\ServiceProvider;
-use Leyton\LaravelCircuitBreaker\Drivers\RedisOfficer;
+use Leyton\LaravelCircuitBreaker\Drivers\CacheOfficer;
 
 class LaravelCircuitBreakerServiceProvider extends ServiceProvider
 {
@@ -11,7 +11,7 @@ class LaravelCircuitBreakerServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Circuit::class, function () {
            return new Circuit(
-               new RedisOfficer(cache()->store(config('circuit-breaker.driver', 'redis')))
+               new CacheOfficer(cache()->store(config('circuit-breaker.driver', 'redis')))
            );
         });
     }
