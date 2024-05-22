@@ -115,7 +115,8 @@ class MakeOrderController extends Controller
                 "payment-service", 
                 fn() => $this->paymentGatewayClient->processPayment($client, $order, $withdrawalPoint->result)
         );
-        
+
+    // ...
         return response()->json($data);
     }
 }
